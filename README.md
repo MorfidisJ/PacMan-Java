@@ -182,11 +182,6 @@ javac PacManGame.java
 java PacManGame
 ```
 
-### From JAR
-```bash
-java -jar PacMan.jar
-```
-
 ## Future Improvements
 
 1. **Planned Features**:
