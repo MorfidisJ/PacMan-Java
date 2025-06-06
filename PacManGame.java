@@ -21,7 +21,7 @@ public class PacManGame extends JFrame {
 
         setTitle("Pac-Man Style Game");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setSize(600, 750); // Increased height from 700 to 750
+        setSize(600, 750); 
         setLocationRelativeTo(null);
         setResizable(false);
     }
@@ -101,10 +101,10 @@ class Board extends JPanel implements ActionListener {
 
     // Animation variables
     private int animationStep = 0;
-    private final int ANIMATION_SPEED = 2; // Changed from 3 to 2 for faster base animation
+    private final int ANIMATION_SPEED = 2; 
     private int mouthAngle = 45;
     private boolean mouthClosing = false;
-    private final int MOUTH_ANGLE_CHANGE = 50; // Changed from 5 to 8 for faster mouth movement
+    private final int MOUTH_ANGLE_CHANGE = 50; 
     
     // Colors (more authentic to original Pac-Man)
     private final Color WALL_COLOR = new Color(0, 0, 255); // Classic blue walls
@@ -123,13 +123,13 @@ class Board extends JPanel implements ActionListener {
 
     private Timer timer;
     private Random random;
-    private Dimension d;  // Move this to class level
+    private Dimension d; 
 
-    // Adjust padding constants
-    private final int PADDING_X = 90;  // Padding on left and right
-    private final int PADDING_Y = 110; // Padding on top
-    private final int PADDING_BOTTOM = 150; // Increased bottom padding
-    private final int SCORE_HEIGHT = 60; // Increased score area height
+    
+    private final int PADDING_X = 90;  
+    private final int PADDING_Y = 110; 
+    private final int PADDING_BOTTOM = 150; 
+    private final int SCORE_HEIGHT = 60; 
 
     // Add game progression variables
     private int currentLevel = 1;
@@ -146,7 +146,7 @@ class Board extends JPanel implements ActionListener {
         addKeyListener(new TAdapter());
         setFocusable(true);
         setBackground(Color.BLACK);
-        // Adjust preferred size with new padding
+       
         setPreferredSize(new Dimension(SCREEN_WIDTH + PADDING_X * 2, 
                                      SCREEN_HEIGHT + PADDING_Y + PADDING_BOTTOM + SCORE_HEIGHT));
         d = getSize();
@@ -330,10 +330,6 @@ class Board extends JPanel implements ActionListener {
             screenData[newPacmanY][newPacmanX] != 1) { // Not a wall
             pacmanX = newPacmanX;
             pacmanY = newPacmanY;
-        } else {
-            // Hit a wall, stop
-            // pacmanDX = 0; // Optional: stop if hitting a wall and no new direction
-            // pacmanDY = 0;
         }
     }
 
@@ -349,13 +345,13 @@ class Board extends JPanel implements ActionListener {
         }
 
         for (int i = 0; i < N_GHOSTS; i++) {
-            // Improved collision detection with different thresholds for eating vs dying
+           
             int distanceX = Math.abs(pacmanX - ghostX[i]);
             int distanceY = Math.abs(pacmanY - ghostY[i]);
             
             if (inGame) {
                 if (ghostFrightened[i]) {
-                    // Stricter collision for eating ghosts - must be very close
+                   
                     if (distanceX <= 0 && distanceY <= 0) {
                         score += 200; // Score for eating a ghost
                         // Send ghost back to starting position
@@ -374,10 +370,10 @@ class Board extends JPanel implements ActionListener {
                         }
                     }
                 } else {
-                    // More forgiving collision for dying (as before)
+                   
                     if (distanceX <= 1 && distanceY <= 1) {
                         dying = true;
-                        return; // Stop further ghost movement this frame
+                        return; 
                     }
                 }
             }
@@ -434,10 +430,10 @@ class Board extends JPanel implements ActionListener {
                     int minDist = Integer.MAX_VALUE;
                     for (int k = 0; k < numPossibleMoves; k++) {
                         // Basic targeting: prefer moves that reduce distance to Pac-Man
-                        // More advanced AI would have Blinky chase, Pinky ambush, etc.
+            
                         int dist = Math.abs(ghostX[i] + possibleDX[k] - pacmanX) + Math.abs(ghostY[i] + possibleDY[k] - pacmanY);
 
-                        // Add a bit of randomness if multiple paths are equally good, or to break ties
+                        
                         if (dist < minDist) {
                             minDist = dist;
                             bestMoveIndex = k;
@@ -560,7 +556,7 @@ class Board extends JPanel implements ActionListener {
         int centerY = pacmanY * TILE_SIZE + TILE_SIZE / 2;
         int radius = TILE_SIZE / 2 - 2;
 
-        // Update mouth animation
+        
         animationStep = (animationStep + 1) % ANIMATION_SPEED;
         if (animationStep == 0) {
             if (mouthClosing) {
@@ -585,15 +581,15 @@ class Board extends JPanel implements ActionListener {
         int startAngle = 0;
         int arcAngle = 360 - (mouthAngle * 2);
         
-        // Fix mouth direction for all movements
+        
         if (pacmanDX == 1) { // Right
             startAngle = mouthAngle;
         } else if (pacmanDX == -1) { // Left
             startAngle = 180 + mouthAngle;
         } else if (pacmanDY == -1) { // Up
-            startAngle = 90 + mouthAngle;  // Fixed: Changed from 270 to 90
+            startAngle = 90 + mouthAngle; 
         } else if (pacmanDY == 1) { // Down
-            startAngle = 270 + mouthAngle; // Fixed: Changed from 90 to 270
+            startAngle = 270 + mouthAngle; 
         }
         
         g2d.fillArc(centerX - radius, centerY - radius, 
@@ -618,39 +614,38 @@ class Board extends JPanel implements ActionListener {
                 g2d.setColor(GHOST_COLORS[i]);
             }
 
-            // Draw main body with more rounded shape
+           
             int bodyHeight = radius * 2;
             int bodyWidth = radius * 2;
             
-            // Draw the main rounded body
+            
             g2d.fillRoundRect(centerX - radius, centerY - radius, 
                             bodyWidth, bodyHeight - 4, 
                             radius, radius);
 
-            // Draw the bottom waves with more curves
+            
             int waveHeight = 6;
             int waveOffset = (int)(Math.sin(animationStep * 0.5) * 2);
             int bottomY = centerY + radius - 4;
             
-            // Create a more curved bottom using multiple arcs
+            
             for (int j = 0; j < 3; j++) {
                 int waveX = centerX - radius + j * (radius * 2 / 3);
                 int waveWidth = radius * 2 / 3;
-                
-                // Draw each wave segment
+               
                 g2d.fillArc(waveX, bottomY - waveHeight/2 + waveOffset, 
                            waveWidth, waveHeight, 
                            0, 180);
             }
 
-            // Draw the bottom skirt with gradient and curves
+            
             if (!ghostFrightened[i]) {
                 for (int j = 0; j < 4; j++) {
                     int skirtY = bottomY + j;
                     int skirtWidth = bodyWidth - j * 3;
                     float alpha = 0.8f - (j * 0.2f);
                     
-                    // Create gradient color
+                   
                     Color skirtColor = new Color(
                         GHOST_COLORS[i].getRed(),
                         GHOST_COLORS[i].getGreen(),
@@ -659,21 +654,21 @@ class Board extends JPanel implements ActionListener {
                     );
                     g2d.setColor(skirtColor);
                     
-                    // Draw curved skirt segments
+                   
                     g2d.fillRoundRect(centerX - skirtWidth/2, skirtY, 
                                     skirtWidth, 2, 
                                     4, 4);
                 }
             }
 
-            // Draw eyes with more rounded appearance
+           
             if (!ghostFrightened[i]) {
-                // Draw eye whites
+               
                 g2d.setColor(GHOST_EYES_COLOR);
                 int eyeSize = radius / 2;
                 int eyeOffset = radius / 3;
                 
-                // Draw more rounded eyes
+                
                 g2d.fillOval(centerX - eyeOffset - eyeSize/2, 
                             centerY - eyeSize/3, 
                             eyeSize, eyeSize);
@@ -682,13 +677,13 @@ class Board extends JPanel implements ActionListener {
                             centerY - eyeSize/3, 
                             eyeSize, eyeSize);
 
-                // Draw pupils with more rounded movement
+               
                 g2d.setColor(GHOST_PUPIL_COLOR);
                 int pupilSize = eyeSize / 2;
                 int pupilOffsetX = 0;
                 int pupilOffsetY = 0;
                 
-                // Calculate pupil position with smoother movement
+               
                 if (ghostDX[i] == 1) {
                     pupilOffsetX = 2;
                     pupilOffsetY = 0;
@@ -703,7 +698,7 @@ class Board extends JPanel implements ActionListener {
                     pupilOffsetY = -2;
                 }
 
-                // Draw pupils with slight offset for more depth
+               
                 g2d.fillOval(centerX - eyeOffset - pupilSize/2 + pupilOffsetX, 
                             centerY - pupilSize/3 + pupilOffsetY, 
                             pupilSize, pupilSize);
@@ -712,15 +707,15 @@ class Board extends JPanel implements ActionListener {
                             centerY - pupilSize/3 + pupilOffsetY, 
                             pupilSize, pupilSize);
             } else {
-                // Draw frightened eyes (more rounded)
+                
                 g2d.setColor(Color.WHITE);
                 int eyeSize = radius / 3;
                 
-                // Draw scared eyes with more rounded shape
+              
                 g2d.fillOval(centerX - eyeSize - 2, centerY - eyeSize/3, eyeSize, eyeSize);
                 g2d.fillOval(centerX + 2, centerY - eyeSize/3, eyeSize, eyeSize);
                 
-                // Draw scared mouth (more rounded)
+               
                 g2d.setColor(Color.WHITE);
                 int mouthWidth = radius;
                 int mouthHeight = 3;
@@ -731,38 +726,38 @@ class Board extends JPanel implements ActionListener {
         }
     }
     private void drawScore(Graphics2D g) {
-        // Draw score in the padded area with more space
-        g.setFont(new Font("Arial", Font.BOLD, 24)); // Increased font size
+        
+        g.setFont(new Font("Arial", Font.BOLD, 24)); 
         g.setColor(Color.WHITE);
         String s = "SCORE: " + score;
         g.drawString(s, PADDING_X + 10, PADDING_Y + SCREEN_HEIGHT + 40);
 
-        // Draw lives with small Pac-Man icons in the padded area
+     
         for (int i = 0; i < lives; i++) {
             g.setColor(PACMAN_COLOR);
-            int x = PADDING_X + SCREEN_WIDTH - (i + 1) * (TILE_SIZE + 15); // Increased spacing
-            int y = PADDING_Y + SCREEN_HEIGHT + 25; // Adjusted vertical position
+            int x = PADDING_X + SCREEN_WIDTH - (i + 1) * (TILE_SIZE + 15);
+            int y = PADDING_Y + SCREEN_HEIGHT + 25; 
             g.fillArc(x, y, TILE_SIZE - 4, TILE_SIZE - 4, 45, 270);
         }
     }
 
     private void showIntroScreen(Graphics2D g2d) {
-        // Use the available game area dimensions instead of window dimensions
+       
         int gameWidth = SCREEN_WIDTH;
         int gameHeight = SCREEN_HEIGHT;
         
-        // Create a dark blue gradient background for game area
+      
         GradientPaint gradient = new GradientPaint(0, 0, new Color(0, 0, 40), 
                                                   gameWidth, gameHeight, new Color(0, 0, 80));
         g2d.setPaint(gradient);
         g2d.fillRect(0, 0, gameWidth, gameHeight);
     
-        // Draw a decorative border
+       
         g2d.setColor(new Color(255, 255, 0, 100));
         g2d.setStroke(new BasicStroke(4));
         g2d.drawRoundRect(10, 10, gameWidth - 20, gameHeight - 20, 20, 20);
     
-        // Draw title with shadow effect
+        
         String title = "PAC-MAN";
         Font titleFont = new Font("Arial", Font.BOLD, Math.min(48, gameWidth / 10));
         FontMetrics titleMetrics = getFontMetrics(titleFont);
@@ -817,7 +812,7 @@ class Board extends JPanel implements ActionListener {
             g2d.fillArc(x, y, pacmanSize, pacmanSize, mouthAngle, 360 - (mouthAngle * 2));
         }
     
-        // Draw instructions with blinking effect
+       \
         if (!inGame && !win) {
             Font smallFont = new Font("Arial", Font.BOLD, Math.min(20, gameWidth / 25));
             FontMetrics smallMetrics = getFontMetrics(smallFont);
@@ -910,7 +905,7 @@ class Board extends JPanel implements ActionListener {
     private void drawDecorativeDots(Graphics2D g2d, int startX, int startY, int width, int height) {
         // Draw small dots around the screen within the usable area
         g2d.setColor(new Color(255, 255, 255, 100));
-        Random rand = new Random(123); // Fixed seed for consistent pattern
+        Random rand = new Random(123); \
         for (int i = 0; i < 50; i++) {
             int x = startX + rand.nextInt(width);
             int y = startY + rand.nextInt(height);
@@ -922,7 +917,7 @@ class Board extends JPanel implements ActionListener {
     private void drawVictoryDecorations(Graphics2D g2d, int startX, int startY, int width, int height) {
         // Draw animated victory stars within the usable area
         long time = System.currentTimeMillis();
-        Random rand = new Random(456); // Fixed seed for consistent pattern
+        Random rand = new Random(456); 
         
         for (int i = 0; i < 20; i++) {
             int x = startX + rand.nextInt(width);
